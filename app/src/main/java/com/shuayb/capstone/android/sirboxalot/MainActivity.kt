@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private val TIMER_STATE_RUNNING = "running"
     private val ROUND_TIME : Int = 15   //In seconds
     private val REST_TIME : Int = 10     //In seconds
+    private val PREPARE_TIME : Int = 5     //In seconds
     private val NUM_ROUNDS : Int = 3
 
     private lateinit var mBinding : ActivityMainBinding
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var timeRemaining : Int = ROUND_TIME
     private var roundsRemaining : Int = NUM_ROUNDS
     private var timerState : String = TIMER_STATE_STOPPED     //State can be stopped/running/paused
+    private var prepareRequired : Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,9 +71,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCounterThread() {
+
         if (roundsRemaining > 0 && timerState == TIMER_STATE_STOPPED) {
-            mediaPlayer.start()
             timerState = TIMER_STATE_RUNNING
+            prepareRequired = true
+            timeRemaining = PREPARE_TIME
         }
         if (timerState == TIMER_STATE_PAUSED) {
             //play resume sound
@@ -79,6 +83,16 @@ class MainActivity : AppCompatActivity() {
         }
         updateTimerViews()
         counterJob = GlobalScope.launch {
+            if (prepareRequired) {
+                while (timeRemaining > 0) {
+                    updateTimerViews()
+                    delay(1000)
+                    timeRemaining--
+                }
+                prepareRequired = false
+                timeRemaining += ROUND_TIME
+                mediaPlayer.start()
+            }
             while (roundsRemaining > 0) {
                 while (timeRemaining > 0) {
                     updateTimerViews()

@@ -3,6 +3,12 @@
     <PreferenceCategory app:title="Timer">
 
         <EditTextPreference
+            app:title="Time to Prepare (seconds)"
+            app:defaultValue="5"
+            app:key="prepare_time_key"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
             app:title="Round Time (seconds)"
             app:defaultValue="15"
             app:key="round_time_key"
