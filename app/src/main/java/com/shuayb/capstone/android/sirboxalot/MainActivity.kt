@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         mBinding.pauseButton.setOnClickListener {
             pauseCounterThread()
         }
+        mBinding.resetButton.setOnClickListener {
+            resetCounter()
+        }
     }
 
     private fun updateTimerViews() {
@@ -133,6 +136,14 @@ class MainActivity : AppCompatActivity() {
     private fun pauseCounterThread() {
         counterJob.cancel()
         timerState = TIMER_STATE_PAUSED
+        updateTimerViews()
+    }
+
+    private fun resetCounter() {
+        counterJob.cancel()
+        timerState = TIMER_STATE_STOPPED
+        roundsRemaining = NUM_ROUNDS
+        timeRemaining = ROUND_TIME
         updateTimerViews()
     }
 
