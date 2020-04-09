@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
         updateTimerViews()
         counterJob = GlobalScope.launch {
-            if (prepareRequired) {
+            if (prepareRequired && PREPARE_TIME > 0) {
                 while (timeRemaining > 0) {
                     updateTimerViews()
                     delay(1000)
