@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initSetup() {
+        updateTimerViews()
         mediaPlayer = MediaPlayer.create(this, R.raw.triple_bell)
         mBinding.startButton.setOnClickListener {
             startCounterThread()
@@ -140,7 +141,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resetCounter() {
-        counterJob.cancel()
+        if (::counterJob.isInitialized) {
+            counterJob.cancel()
+        }
         timerState = TIMER_STATE_STOPPED
         roundsRemaining = NUM_ROUNDS
         timeRemaining = ROUND_TIME

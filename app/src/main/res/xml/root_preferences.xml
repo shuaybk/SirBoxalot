@@ -1,35 +1,36 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="Timer">
 
         <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+            app:title="Round Time (seconds)"
+            app:defaultValue="15"
+            app:key="round_time_key"
             app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:title="Rest Time (seconds)"
+            app:defaultValue="10"
+            app:key="rest_time_key"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:title="Number of Rounds"
+            app:defaultValue="3"
+            app:key="num_rounds_key"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Sounds">
 
         <ListPreference
             app:defaultValue="reply"
             app:entries="@array/reply_entries"
             app:entryValues="@array/reply_values"
             app:key="reply"
-            app:title="@string/reply_title"
+            app:title="Reply"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory>
-
 </PreferenceScreen>
