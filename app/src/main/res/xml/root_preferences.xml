@@ -52,11 +52,51 @@
     <PreferenceCategory app:title="Sounds">
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="Reply"
+            app:defaultValue="@raw/triple_bell"
+            app:entries="@array/sound_entries"
+            app:entryValues="@array/sound_values"
+            app:key="round_start_sound"
+            app:title="@string/settings_round_start_sound_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@raw/triple_bell"
+            app:entries="@array/sound_entries"
+            app:entryValues="@array/sound_values"
+            app:key="round_end_sound"
+            app:title="@string/settings_round_end_sound_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@raw/long_beep"
+            app:entries="@array/sound_entries"
+            app:entryValues="@array/sound_values"
+            app:key="round_end_warn_sound"
+            app:title="@string/settings_round_end_warn_sound_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@raw/long_beep"
+            app:entries="@array/sound_entries"
+            app:entryValues="@array/sound_values"
+            app:key="rest_end_warn_sound"
+            app:title="@string/settings_rest_end_warn_sound_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@raw/short_beep"
+            app:entries="@array/sound_entries"
+            app:entryValues="@array/sound_values"
+            app:key="inter_round_alert_sound"
+            app:title="@string/settings_inter_round_alert_sound_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@raw/short_beep"
+            app:entries="@array/sound_entries"
+            app:entryValues="@array/sound_values"
+            app:key="pause_resume_sound"
+            app:title="@string/settings_pause_resume_sound_title"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>

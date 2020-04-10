@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.shuayb.capstone.android.sirboxalot.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
@@ -202,8 +203,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun playSound(soundType : String) {
+        var soundValues = getResources().obtainTypedArray(R.array.sound_values)
+        var strArray = resources.getStringArray(R.array.sound_values)
+        var strRoundStart = sharedPreferences.getString("round_start_sound", strArray[2])
+        
         when (soundType) {
-            SOUND_TYPE_START_MAIN -> launchSoundThread(R.raw.triple_bell)
+            SOUND_TYPE_START_MAIN -> {
+                for (i in 0 .. strArray.size - 1) {
+                    if (strArray[i] == strRoundStart) {
+                        launchSoundThread(soundValues.getResourceId(i, -1))
+                    }
+                }
+            }
             SOUND_TYPE_END_MAIN -> launchSoundThread(R.raw.triple_bell)
             SOUND_TYPE_ROUND_END_WARN -> launchSoundThread(R.raw.short_beep)
             SOUND_TYPE_REST_END_WARN -> launchSoundThread(R.raw.short_beep)

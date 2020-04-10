@@ -9,13 +9,21 @@
     <string name="status_complete">Complete</string>
     <string name="status_paused">--paused--</string>
 
-    <!-- Settings -->
+    <!-- Time Settings -->
     <string name="settings_num_rounds_title">Number of Rounds</string>
     <string name="settings_round_time_title">Round Time (seconds)</string>
     <string name="settings_rest_time_title">Rest Time (seconds)</string>
     <string name="settings_prep_time_title">Time to Prepare (seconds)</string>
-    <string name="settings_round_end_warn_title">Round end warning</string>
-    <string name="settings_rest_end_warn_title">Rest end warning</string>
-    <string name="settings_inter_round_alert_title">Interim round alert</string>
+    <string name="settings_round_end_warn_title">Round End Warning</string>
+    <string name="settings_rest_end_warn_title">Rest End Warning</string>
+    <string name="settings_inter_round_alert_title">Interim Round Alert</string>
+
+    <!-- Sound Settings -->
+    <string name="settings_round_start_sound_title">Round Start</string>
+    <string name="settings_round_end_sound_title">Round End</string>
+    <string name="settings_round_end_warn_sound_title">Round End Warning</string>
+    <string name="settings_rest_end_warn_sound_title">Rest End Warning</string>
+    <string name="settings_inter_round_alert_sound_title">Interim Round Alert</string>
+    <string name="settings_pause_resume_sound_title">Round Start</string>
 
 </resources>
