@@ -19,12 +19,21 @@ class MainActivity : AppCompatActivity() {
     private val TIMER_STATE_STOPPED = "stopped"
     private val TIMER_STATE_PAUSED = "paused"
     private val TIMER_STATE_RUNNING = "running"
+    private val SOUND_TYPE_START_MAIN = "start"
+    private val SOUND_TYPE_END_MAIN = "end"
+    private val SOUND_TYPE_ROUND_END_WARN = "round_end_warning"
+    private val SOUND_TYPE_REST_END_WARN = "rest_end_warning"
+    private val SOUND_TYPE_INTER_ALERT = "inter_alert"
+    private val SOUND_TYPE_PAUSE_RESUME = "pause/resume"
 
     //Initialize the real values from settings
     private var NUM_ROUNDS : Int = 0
     private var ROUND_TIME : Int = 0   //In seconds
     private var REST_TIME : Int = 0     //In seconds
     private var PREPARE_TIME : Int = 0     //In seconds
+    private var ROUND_END_WARNING_TIME : Int = 0     //In seconds
+    private var REST_END_WARNING_TIME : Int = 0     //In seconds
+    private var INTER_ALTERT_TIME : Int = 0     //In seconds
 
     private lateinit var STATUS_PREP : String
     private lateinit var STATUS_FIGHT : String
@@ -99,19 +108,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCounterThread() {
-
         if (roundsRemaining > 0 && timerState == TIMER_STATE_STOPPED) {
             timerState = TIMER_STATE_RUNNING
             prepareRequired = true
             timeRemaining = PREPARE_TIME
         }
         if (timerState == TIMER_STATE_PAUSED) {
-            //play resume sound
+            playSound(SOUND_TYPE_PAUSE_RESUME)
             timerState = TIMER_STATE_RUNNING
         }
         updateTimerViews("")
         counterJob = GlobalScope.launch {
             if (prepareRequired && PREPARE_TIME > 0) {
+                playSound(SOUND_TYPE_PAUSE_RESUME)
                 //This is the prepare timer
                 while (timeRemaining > 0) {
                     updateTimerViews(STATUS_PREP)
@@ -120,20 +129,29 @@ class MainActivity : AppCompatActivity() {
                 }
                 prepareRequired = false
                 timeRemaining = ROUND_TIME
-                playSound()
+                playSound(SOUND_TYPE_START_MAIN)
             }
             while (roundsRemaining > 0) {
                 //This is the fight timer
                 while (timeRemaining > 0) {
+                    if (timeRemaining == ROUND_END_WARNING_TIME) {
+                        playSound(SOUND_TYPE_ROUND_END_WARN)
+                    }
+                    if (timeRemaining == INTER_ALTERT_TIME) {
+                        playSound(SOUND_TYPE_INTER_ALERT)
+                    }
                     updateTimerViews(STATUS_FIGHT)
                     delay(1000)
                     timeRemaining--
                 }
                 if (roundsRemaining > 1 && REST_TIME > 0) {
                     timeRemaining = REST_TIME
-                    playSound()
+                    playSound(SOUND_TYPE_END_MAIN)
                     //This is the rest timer
                     while (timeRemaining > 0) {
+                        if (timeRemaining == REST_END_WARNING_TIME) {
+                            playSound(SOUND_TYPE_REST_END_WARN)
+                        }
                         updateTimerViews(STATUS_REST)
                         delay(1000)
                         timeRemaining--
@@ -142,16 +160,17 @@ class MainActivity : AppCompatActivity() {
                 roundsRemaining--
                 if (roundsRemaining > 0) {
                     timeRemaining = ROUND_TIME
-                    playSound()
+                    playSound(SOUND_TYPE_START_MAIN)
                 }
             }
-            playSound() //End bell
+            playSound(SOUND_TYPE_END_MAIN)
             timerState = TIMER_STATE_STOPPED
             updateTimerViews(STATUS_COMPLETE)
         }
     }
 
     private fun pauseCounterThread() {
+        playSound(SOUND_TYPE_PAUSE_RESUME)
         counterJob.cancel()
         timerState = TIMER_STATE_PAUSED
         updateTimerViews(STATUS_PAUSED)
@@ -170,6 +189,9 @@ class MainActivity : AppCompatActivity() {
         ROUND_TIME = sharedPreferences.getString("round_time_key", "15").toInt()
         REST_TIME = sharedPreferences.getString("rest_time_key", "10").toInt()
         PREPARE_TIME = sharedPreferences.getString("prepare_time_key", "5").toInt()
+        ROUND_END_WARNING_TIME = sharedPreferences.getString("round_end_warn_time_key", "5").toInt()
+        REST_END_WARNING_TIME = sharedPreferences.getString("rest_end_warn_time_key", "3").toInt()
+        INTER_ALTERT_TIME = sharedPreferences.getString("inter_round_alert_time_key", "10").toInt()
         timeRemaining = ROUND_TIME
         roundsRemaining = NUM_ROUNDS
     }
@@ -179,9 +201,20 @@ class MainActivity : AppCompatActivity() {
         resetCounter()
     }
 
-    private fun playSound() {
+    private fun playSound(soundType : String) {
+        when (soundType) {
+            SOUND_TYPE_START_MAIN -> launchSoundThread(R.raw.triple_bell)
+            SOUND_TYPE_END_MAIN -> launchSoundThread(R.raw.triple_bell)
+            SOUND_TYPE_ROUND_END_WARN -> launchSoundThread(R.raw.short_beep)
+            SOUND_TYPE_REST_END_WARN -> launchSoundThread(R.raw.short_beep)
+            SOUND_TYPE_INTER_ALERT -> launchSoundThread(R.raw.long_beep)
+            SOUND_TYPE_PAUSE_RESUME -> launchSoundThread(R.raw.short_beep)
+        }
+    }
+
+    private fun launchSoundThread(rawResId : Int) {
         GlobalScope.launch {
-            val mpSound = MediaPlayer.create(applicationContext, R.raw.triple_bell)
+            val mpSound = MediaPlayer.create(applicationContext, rawResId)
             mpSound.start()
         }
     }
