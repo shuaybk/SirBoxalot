@@ -9,4 +9,13 @@
     <string name="status_complete">Complete</string>
     <string name="status_paused">--paused--</string>
 
+    <!-- Settings -->
+    <string name="settings_num_rounds_title">Number of Rounds</string>
+    <string name="settings_round_time_title">Round Time (seconds)</string>
+    <string name="settings_rest_time_title">Rest Time (seconds)</string>
+    <string name="settings_prep_time_title">Time to Prepare (seconds)</string>
+    <string name="settings_round_end_warn_title">Round end warning</string>
+    <string name="settings_rest_end_warn_title">Rest end warning</string>
+    <string name="settings_inter_round_alert_title">Interim round alert</string>
+
 </resources>
