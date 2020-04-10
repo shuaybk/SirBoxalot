@@ -2,4 +2,11 @@
     <string name="app_name">SirBoxalot</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Main status text -->
+    <string name="status_fight">Fight!</string>
+    <string name="status_rest">Rest</string>
+    <string name="status_prep">Prepare to Fight</string>
+    <string name="status_complete">Complete</string>
+    <string name="status_paused">--paused--</string>
+
 </resources>

@@ -23,10 +23,15 @@ class MainActivity : AppCompatActivity() {
     private val PREPARE_TIME : Int = 5     //In seconds
     private val NUM_ROUNDS : Int = 3
 
+    private lateinit var STATUS_PREP : String
+    private lateinit var STATUS_FIGHT : String
+    private lateinit var STATUS_REST : String
+    private lateinit var STATUS_COMPLETE : String
+    private lateinit var STATUS_PAUSED : String
+
     private lateinit var mBinding : ActivityMainBinding
     private lateinit var mediaPlayer : MediaPlayer
     private lateinit var counterJob : Job
-    private lateinit var counterThread : Thread
     private var timeRemaining : Int = ROUND_TIME
     private var roundsRemaining : Int = NUM_ROUNDS
     private var timerState : String = TIMER_STATE_STOPPED     //State can be stopped/running/paused
@@ -39,7 +44,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initSetup() {
-        updateTimerViews()
+        STATUS_PREP = getString(R.string.status_prep)
+        STATUS_FIGHT = getString(R.string.status_fight)
+        STATUS_REST = getString(R.string.status_rest)
+        STATUS_COMPLETE = getString(R.string.status_complete)
+        STATUS_PAUSED = getString(R.string.status_paused)
+
+        updateTimerViews("")
         mediaPlayer = MediaPlayer.create(this, R.raw.triple_bell)
         mBinding.startButton.setOnClickListener {
             startCounterThread()
@@ -50,22 +61,32 @@ class MainActivity : AppCompatActivity() {
         mBinding.resetButton.setOnClickListener {
             resetCounter()
         }
+        mBinding.forwardButton.setOnClickListener {
+            timeRemaining = 0;
+        }
+        if (timeRemaining < 0) {
+            timeRemaining = 0
+        }
     }
 
-    private fun updateTimerViews() {
+    private fun updateTimerViews(currStatus : String) {
         runOnUiThread {
+            mBinding.timerStatusText.setText(currStatus)
             mBinding.roundTimeRemaining.setText("$timeRemaining")
             mBinding.roundsRemaining.setText("$roundsRemaining")
 
             if (timerState == TIMER_STATE_STOPPED) {
                 mBinding.startButton.visibility = View.VISIBLE
                 mBinding.pauseButton.visibility = View.INVISIBLE
+                mBinding.forwardButton.visibility = View.GONE
             } else if (timerState == TIMER_STATE_PAUSED) {
                 mBinding.startButton.visibility = View.VISIBLE
                 mBinding.pauseButton.visibility = View.INVISIBLE
+                mBinding.forwardButton.visibility = View.VISIBLE
             } else if (timerState == TIMER_STATE_RUNNING) {
                 mBinding.startButton.visibility = View.INVISIBLE
                 mBinding.pauseButton.visibility = View.VISIBLE
+                mBinding.forwardButton.visibility = View.VISIBLE
             }
         }
     }
@@ -81,77 +102,52 @@ class MainActivity : AppCompatActivity() {
             //play resume sound
             timerState = TIMER_STATE_RUNNING
         }
-        updateTimerViews()
+        updateTimerViews("")
         counterJob = GlobalScope.launch {
             if (prepareRequired && PREPARE_TIME > 0) {
+                //This is the prepare timer
                 while (timeRemaining > 0) {
-                    updateTimerViews()
+                    updateTimerViews(STATUS_PREP)
                     delay(1000)
                     timeRemaining--
                 }
                 prepareRequired = false
-                timeRemaining += ROUND_TIME
-                mediaPlayer.start()
+                timeRemaining = ROUND_TIME
+                playSound()
             }
             while (roundsRemaining > 0) {
+                //This is the fight timer
                 while (timeRemaining > 0) {
-                    updateTimerViews()
+                    updateTimerViews(STATUS_FIGHT)
                     delay(1000)
                     timeRemaining--
                 }
                 if (roundsRemaining > 1 && REST_TIME > 0) {
-                    timeRemaining += REST_TIME
-                    mediaPlayer.start()
-
+                    timeRemaining = REST_TIME
+                    playSound()
+                    //This is the rest timer
                     while (timeRemaining > 0) {
-                        updateTimerViews()
+                        updateTimerViews(STATUS_REST)
                         delay(1000)
                         timeRemaining--
                     }
                 }
                 roundsRemaining--
                 if (roundsRemaining > 0) {
-                    timeRemaining += ROUND_TIME
-                    mediaPlayer.start()
+                    timeRemaining = ROUND_TIME
+                    playSound()
                 }
             }
-            mediaPlayer.start() //End bell
+            playSound() //End bell
             timerState = TIMER_STATE_STOPPED
-            updateTimerViews()
+            updateTimerViews(STATUS_COMPLETE)
         }
-        /*
-        counterJob = GlobalScope.launch {
-            while (roundsRemaining > 0) {
-                timeRemaining += ROUND_TIME
-                mediaPlayer.start()
-                while (timeRemaining > 0) {
-                    updateTimerViews()
-                    delay(1000)
-                    timeRemaining--
-                }
-                if (roundsRemaining > 1 && REST_TIME > 0) {
-                    timeRemaining += REST_TIME
-                    mediaPlayer.start()
-
-                    while (timeRemaining > 0) {
-                        updateTimerViews()
-                        delay(1000)
-                        timeRemaining--
-                    }
-                }
-                roundsRemaining--
-            }
-            updateTimerViews()
-            mediaPlayer.start() //End bell
-            timerRunning = false
-        }
-         */
     }
 
     private fun pauseCounterThread() {
         counterJob.cancel()
         timerState = TIMER_STATE_PAUSED
-        updateTimerViews()
+        updateTimerViews(STATUS_PAUSED)
     }
 
     private fun resetCounter() {
@@ -161,7 +157,14 @@ class MainActivity : AppCompatActivity() {
         timerState = TIMER_STATE_STOPPED
         roundsRemaining = NUM_ROUNDS
         timeRemaining = ROUND_TIME
-        updateTimerViews()
+        updateTimerViews("")
+    }
+
+    private fun playSound() {
+        GlobalScope.launch {
+            val mpSound = MediaPlayer.create(applicationContext, R.raw.triple_bell)
+            mpSound.start()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -3,9 +3,9 @@
     <PreferenceCategory app:title="Timer">
 
         <EditTextPreference
-            app:title="Time to Prepare (seconds)"
-            app:defaultValue="5"
-            app:key="prepare_time_key"
+            app:title="Number of Rounds"
+            app:defaultValue="3"
+            app:key="num_rounds_key"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
@@ -21,9 +21,30 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            app:title="Number of Rounds"
+            app:title="Time to Prepare (seconds)"
+            app:defaultValue="5"
+            app:key="prepare_time_key"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:title="Round end warning"
+            app:summary="A warning sound will play this many seconds before the round ends"
+            app:defaultValue="5"
+            app:key="round_end_warn_time_key"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:title="Rest end warning"
+            app:summary="A warning sound will play this many seconds before the rest period ends"
             app:defaultValue="3"
-            app:key="num_rounds_key"
+            app:key="rest_end_warn_time_key"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:title="Interim round alert"
+            app:summary="An alert will sound this many seconds before the round ends"
+            app:defaultValue="10"
+            app:key="inter_round_alert_time_key"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
