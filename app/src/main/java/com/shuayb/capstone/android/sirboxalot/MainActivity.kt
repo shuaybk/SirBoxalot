@@ -89,7 +89,9 @@ class MainActivity : AppCompatActivity() {
             }
             mBinding.timerStatusText.setText(currStatus)
             mBinding.roundTimeRemaining.setText("$timeRemaining")
-            mBinding.roundsRemaining.setText("$roundsRemaining")
+
+            val currRound = getString(R.string.round_header) + " " + (NUM_ROUNDS - roundsRemaining + 1) + " / " + NUM_ROUNDS
+            mBinding.roundsRemaining.setText(currRound)
 
             if (timerState == TIMER_STATE_STOPPED) {
                 mBinding.startButton.visibility = View.VISIBLE

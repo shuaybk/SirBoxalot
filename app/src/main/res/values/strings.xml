@@ -26,4 +26,8 @@
     <string name="settings_inter_round_alert_sound_title">Interim Round Alert</string>
     <string name="settings_pause_resume_sound_title">Pause/Resume</string>
 
+    <!-- Misc -->
+    <string name="round_time_remaining_header">Time Remaining</string>
+    <string name="round_header">Round</string>
+
 </resources>
