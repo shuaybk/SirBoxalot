@@ -6,4 +6,8 @@
     <color name="colorTextPrimary">#FFFFFF</color>
     <color name="colorTextContrast">#000000</color>
     <color name="colorTextHint">#979797</color>
+
+    <color name="greenBright">#17DA00</color>
+    <color name="greenDark">#12AB00</color>
+    <color name="white">#FFFFFF</color>
 </resources>

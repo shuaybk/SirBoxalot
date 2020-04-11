@@ -32,7 +32,7 @@
             android:id="@+id/round_time_remaining_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/round_time_remaining_header"
             app:layout_constraintBottom_toTopOf="@id/start_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,17 +42,20 @@
             android:id="@+id/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/green_button"
+            android:textSize="20sp"
             android:text="Start"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/pause_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/plain_button"
+            android:textSize="20sp"
             android:text="Pause"
             android:visibility="invisible"
             app:layout_constraintTop_toTopOf="@id/start_button"
@@ -63,6 +66,8 @@
             android:id="@+id/forward_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/plain_button"
+            android:textSize="20sp"
             android:text=">"
             android:visibility="gone"
             android:layout_marginStart="20dp"
@@ -73,20 +78,22 @@
             android:id="@+id/reset_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_button"
             android:text="Reset"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/start_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/start_button" />
 
         <TextView
             android:id="@+id/rounds_remaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
             android:text="0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reset_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
