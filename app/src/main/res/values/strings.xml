@@ -29,5 +29,5 @@
     <!-- Misc -->
     <string name="round_time_remaining_header">Time Remaining</string>
     <string name="round_header">Round</string>
-
+    <string name="toast_settings_change">Reset timer for changes to take effect</string>
 </resources>
