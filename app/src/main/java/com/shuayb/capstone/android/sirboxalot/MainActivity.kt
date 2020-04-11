@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private var roundsRemaining : Int = 0
     private var timerState : String = TIMER_STATE_STOPPED     //State can be stopped/running/paused
     private var prepareRequired : Boolean = true
+    private var resting : Boolean = false
     private lateinit var sharedPreferences : SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             }
             while (roundsRemaining > 0) {
                 //This is the fight timer
-                while (timeRemaining > 0) {
+                while (timeRemaining > 0 && !resting) {
                     if (timeRemaining == ROUND_END_WARNING_TIME) {
                         playSound(SOUND_TYPE_ROUND_END_WARN)
                     }
@@ -144,7 +145,10 @@ class MainActivity : AppCompatActivity() {
                     timeRemaining--
                 }
                 if (roundsRemaining > 1 && REST_TIME > 0) {
-                    timeRemaining = REST_TIME
+                    if (!resting) {
+                        timeRemaining = REST_TIME
+                    }
+                    resting = true
                     playSound(SOUND_TYPE_END_MAIN)
                     //This is the rest timer
                     while (timeRemaining > 0) {
@@ -155,6 +159,7 @@ class MainActivity : AppCompatActivity() {
                         delay(1000)
                         timeRemaining--
                     }
+                    resting = false
                 }
                 roundsRemaining--
                 if (roundsRemaining > 0) {
@@ -179,6 +184,7 @@ class MainActivity : AppCompatActivity() {
         if (::counterJob.isInitialized) {
             counterJob.cancel()
         }
+        resting = false
         timerState = TIMER_STATE_STOPPED
         updateTimerViews("")
     }
