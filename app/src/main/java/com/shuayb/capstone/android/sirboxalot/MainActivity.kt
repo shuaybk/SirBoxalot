@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import com.shuayb.capstone.android.sirboxalot.Utils.RandomUtils
 import com.shuayb.capstone.android.sirboxalot.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
@@ -88,23 +89,28 @@ class MainActivity : AppCompatActivity() {
                 timeRemaining = 0
             }
             mBinding.timerStatusText.setText(currStatus)
-            mBinding.roundTimeRemaining.setText("$timeRemaining")
+            mBinding.roundTimeRemaining.setText(RandomUtils.secondsToFormattedTime(timeRemaining))
 
-            val currRound = getString(R.string.round_header) + " " + (NUM_ROUNDS - roundsRemaining + 1) + " / " + NUM_ROUNDS
-            mBinding.roundsRemaining.setText(currRound)
+            var currRoundInt = NUM_ROUNDS - roundsRemaining + 1
+            if (currRoundInt > NUM_ROUNDS) { currRoundInt = NUM_ROUNDS }  //Otherwise completion will show an extra round
+            val currRoundStr = getString(R.string.round_header) + " " + currRoundInt + " / " + NUM_ROUNDS
+            mBinding.roundsRemaining.setText(currRoundStr)
 
             if (timerState == TIMER_STATE_STOPPED) {
                 mBinding.startButton.visibility = View.VISIBLE
                 mBinding.pauseButton.visibility = View.INVISIBLE
                 mBinding.forwardButton.visibility = View.GONE
+                mBinding.roundsRemaining.visibility = View.INVISIBLE
             } else if (timerState == TIMER_STATE_PAUSED) {
                 mBinding.startButton.visibility = View.VISIBLE
                 mBinding.pauseButton.visibility = View.INVISIBLE
                 mBinding.forwardButton.visibility = View.VISIBLE
+                mBinding.roundsRemaining.visibility = View.VISIBLE
             } else if (timerState == TIMER_STATE_RUNNING) {
                 mBinding.startButton.visibility = View.INVISIBLE
                 mBinding.pauseButton.visibility = View.VISIBLE
                 mBinding.forwardButton.visibility = View.VISIBLE
+                mBinding.roundsRemaining.visibility = View.VISIBLE
             }
         }
     }
@@ -199,7 +205,7 @@ class MainActivity : AppCompatActivity() {
         ROUND_END_WARNING_TIME = sharedPreferences.getString("round_end_warn_time_key", "5").toInt()
         REST_END_WARNING_TIME = sharedPreferences.getString("rest_end_warn_time_key", "3").toInt()
         INTER_ALTERT_TIME = sharedPreferences.getString("inter_round_alert_time_key", "10").toInt()
-        timeRemaining = ROUND_TIME
+        timeRemaining = 0
         roundsRemaining = NUM_ROUNDS
     }
 
