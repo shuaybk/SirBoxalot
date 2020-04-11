@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import com.shuayb.capstone.android.sirboxalot.Utils.RandomUtils
 import com.shuayb.capstone.android.sirboxalot.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+import kotlin.concurrent.timer
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +28,19 @@ class MainActivity : AppCompatActivity() {
     private val SOUND_TYPE_REST_END_WARN = "rest_end_warning"
     private val SOUND_TYPE_INTER_ALERT = "inter_alert"
     private val SOUND_TYPE_PAUSE_RESUME = "pause/resume"
+    private val BUNDLE_KEY_TIME_REMAINING = "bundle_key_time_remaining"
+    private val BUNDLE_KEY_ROUNDS_REMAINING = "bundle_key_rounds_remaining"
+    private val BUNDLE_KEY_TIMER_STATE = "bundle_key_timer_state"
+    private val BUNDLE_KEY_PREPARE_REQUIRED = "bundle_key_prepare_required"
+    private val BUNDLE_KEY_RESTING = "bundle_key_resting"
+    private val BUNDLE_KEY_LAST_MESSAGE = "bundle_key_last_message"
+    private val BUNDLE_KEY_NUM_ROUNDS = "bundle_key_num_rounds"
+    private val BUNDLE_KEY_ROUND_TIME = "bundle_key_round_time"
+    private val BUNDLE_KEY_REST_TIME = "bundle_key_rest_time"
+    private val BUNDLE_KEY_PREPARE_TIME = "bundle_key_prepare_time"
+    private val BUNDLE_KEY_ROUND_END_WARN_TIME = "bundle_key_round_end_warn_time"
+    private val BUNDLE_KEY_REST_END_WARN_TIME = "bundle_key_rest_end_warn_time"
+    private val BUNDLE_KEY_INTER_ALERT_TIME = "bundle_key_inter_alert_time"
 
     //Initialize the real values from settings
     private var NUM_ROUNDS : Int = 0
@@ -52,11 +66,16 @@ class MainActivity : AppCompatActivity() {
     private var resting : Boolean = false
     private lateinit var sharedPreferences : SharedPreferences
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         initSetup()
+
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState)
+        }
     }
 
     private fun initSetup() {
@@ -80,6 +99,27 @@ class MainActivity : AppCompatActivity() {
         }
         mBinding.forwardButton.setOnClickListener {
             timeRemaining = 0;
+        }
+    }
+
+    private fun restoreState(savedInstanceState: Bundle) {
+        timeRemaining = savedInstanceState.getInt(BUNDLE_KEY_TIME_REMAINING)
+        roundsRemaining = savedInstanceState.getInt(BUNDLE_KEY_ROUNDS_REMAINING)
+        timerState = savedInstanceState.getString(BUNDLE_KEY_TIMER_STATE)
+        prepareRequired = savedInstanceState.getBoolean(BUNDLE_KEY_PREPARE_REQUIRED)
+        resting = savedInstanceState.getBoolean(BUNDLE_KEY_RESTING)
+        val lastMessageDisplayed = savedInstanceState.getString(BUNDLE_KEY_LAST_MESSAGE)
+        NUM_ROUNDS = savedInstanceState.getInt(BUNDLE_KEY_NUM_ROUNDS)
+        ROUND_TIME = savedInstanceState.getInt(BUNDLE_KEY_ROUND_TIME)
+        REST_TIME = savedInstanceState.getInt(BUNDLE_KEY_REST_TIME)
+        PREPARE_TIME = savedInstanceState.getInt(BUNDLE_KEY_PREPARE_TIME)
+        ROUND_END_WARNING_TIME = savedInstanceState.getInt(BUNDLE_KEY_ROUND_END_WARN_TIME)
+        REST_END_WARNING_TIME = savedInstanceState.getInt(BUNDLE_KEY_REST_END_WARN_TIME)
+        INTER_ALTERT_TIME = savedInstanceState.getInt(BUNDLE_KEY_INTER_ALERT_TIME)
+
+        updateTimerViews(lastMessageDisplayed)
+        when (timerState) {
+            TIMER_STATE_RUNNING -> startCounterThread()
         }
     }
 
@@ -128,7 +168,9 @@ class MainActivity : AppCompatActivity() {
         updateTimerViews("")
         counterJob = GlobalScope.launch {
             if (prepareRequired && PREPARE_TIME > 0) {
-                playSound(SOUND_TYPE_PAUSE_RESUME)
+                if (timeRemaining == PREPARE_TIME) {
+                    playSound(SOUND_TYPE_PAUSE_RESUME)
+                }
                 //This is the prepare timer
                 while (timeRemaining > 0) {
                     updateTimerViews(STATUS_PREP)
@@ -155,9 +197,9 @@ class MainActivity : AppCompatActivity() {
                 if (roundsRemaining > 1 && REST_TIME > 0) {
                     if (!resting) {
                         timeRemaining = REST_TIME
+                        playSound(SOUND_TYPE_END_MAIN)
                     }
                     resting = true
-                    playSound(SOUND_TYPE_END_MAIN)
                     //This is the rest timer
                     while (timeRemaining > 0) {
                         if (timeRemaining == REST_END_WARNING_TIME) {
@@ -265,4 +307,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::counterJob.isInitialized) {
+            counterJob.cancel()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(BUNDLE_KEY_TIME_REMAINING, timeRemaining)
+        outState.putInt(BUNDLE_KEY_ROUNDS_REMAINING, roundsRemaining)
+        outState.putString(BUNDLE_KEY_TIMER_STATE, timerState)
+        outState.putBoolean(BUNDLE_KEY_PREPARE_REQUIRED, prepareRequired)
+        outState.putBoolean(BUNDLE_KEY_RESTING, resting)
+        outState.putString(BUNDLE_KEY_LAST_MESSAGE, mBinding.timerStatusText.text.toString())
+        outState.putInt(BUNDLE_KEY_NUM_ROUNDS, NUM_ROUNDS)
+        outState.putInt(BUNDLE_KEY_ROUND_TIME, ROUND_TIME)
+        outState.putInt(BUNDLE_KEY_REST_TIME, REST_TIME)
+        outState.putInt(BUNDLE_KEY_PREPARE_TIME, PREPARE_TIME)
+        outState.putInt(BUNDLE_KEY_ROUND_END_WARN_TIME, ROUND_END_WARNING_TIME)
+        outState.putInt(BUNDLE_KEY_REST_END_WARN_TIME, REST_END_WARNING_TIME)
+        outState.putInt(BUNDLE_KEY_INTER_ALERT_TIME, INTER_ALTERT_TIME)
+    }
 }
