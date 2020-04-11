@@ -24,6 +24,6 @@
     <string name="settings_round_end_warn_sound_title">Round End Warning</string>
     <string name="settings_rest_end_warn_sound_title">Rest End Warning</string>
     <string name="settings_inter_round_alert_sound_title">Interim Round Alert</string>
-    <string name="settings_pause_resume_sound_title">Round Start</string>
+    <string name="settings_pause_resume_sound_title">Pause/Resume</string>
 
 </resources>

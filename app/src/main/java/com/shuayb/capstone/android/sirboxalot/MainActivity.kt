@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var STATUS_PAUSED : String
 
     private lateinit var mBinding : ActivityMainBinding
-    private lateinit var mediaPlayer : MediaPlayer
     private lateinit var counterJob : Job
     private var timeRemaining : Int = 0
     private var roundsRemaining : Int = 0
@@ -68,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         setValuesFromSettings()
 
         updateTimerViews("")
-        mediaPlayer = MediaPlayer.create(this, R.raw.triple_bell)
         mBinding.startButton.setOnClickListener {
             startCounterThread()
         }
@@ -203,24 +201,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun playSound(soundType : String) {
-        var soundValues = getResources().obtainTypedArray(R.array.sound_values)
-        var strArray = resources.getStringArray(R.array.sound_values)
-        var strRoundStart = sharedPreferences.getString("round_start_sound", strArray[2])
-        
+        val soundValues = getResources().obtainTypedArray(R.array.sound_values)
+        val strArray = resources.getStringArray(R.array.sound_values)
+        var strSoundValue : String? = ""
+        var soundId : Int = 0
+
+        //Determine the string value of the raw resource we are going to play the sound for
         when (soundType) {
-            SOUND_TYPE_START_MAIN -> {
-                for (i in 0 .. strArray.size - 1) {
-                    if (strArray[i] == strRoundStart) {
-                        launchSoundThread(soundValues.getResourceId(i, -1))
-                    }
-                }
-            }
-            SOUND_TYPE_END_MAIN -> launchSoundThread(R.raw.triple_bell)
-            SOUND_TYPE_ROUND_END_WARN -> launchSoundThread(R.raw.short_beep)
-            SOUND_TYPE_REST_END_WARN -> launchSoundThread(R.raw.short_beep)
-            SOUND_TYPE_INTER_ALERT -> launchSoundThread(R.raw.long_beep)
-            SOUND_TYPE_PAUSE_RESUME -> launchSoundThread(R.raw.short_beep)
+            SOUND_TYPE_START_MAIN -> strSoundValue = sharedPreferences.getString("round_start_sound", strArray[9])
+            SOUND_TYPE_END_MAIN -> strSoundValue = sharedPreferences.getString("round_end_sound", strArray[9])
+            SOUND_TYPE_ROUND_END_WARN -> strSoundValue = sharedPreferences.getString("round_end_warn_sound", strArray[2])
+            SOUND_TYPE_REST_END_WARN -> strSoundValue = sharedPreferences.getString("rest_end_warn_sound", strArray[2])
+            SOUND_TYPE_INTER_ALERT -> strSoundValue = sharedPreferences.getString("inter_round_alert_sound", strArray[4])
+            SOUND_TYPE_PAUSE_RESUME -> strSoundValue = sharedPreferences.getString("pause_resume_sound", strArray[5])
         }
+
+        //Determine the resource ID for the string raw resource
+        for (i in 0 .. strArray.size - 1) {
+            if (strArray[i] == strSoundValue) {
+                soundId = soundValues.getResourceId(i, 0)
+                break
+            }
+        }
+        soundValues.recycle()
+        launchSoundThread(soundId)
     }
 
     private fun launchSoundThread(rawResId : Int) {

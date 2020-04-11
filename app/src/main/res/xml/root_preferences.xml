@@ -52,7 +52,7 @@
     <PreferenceCategory app:title="Sounds">
 
         <ListPreference
-            app:defaultValue="@raw/triple_bell"
+            app:defaultValue="@raw/triple_bell_1"
             app:entries="@array/sound_entries"
             app:entryValues="@array/sound_values"
             app:key="round_start_sound"
@@ -60,7 +60,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="@raw/triple_bell"
+            app:defaultValue="@raw/triple_bell_1"
             app:entries="@array/sound_entries"
             app:entryValues="@array/sound_values"
             app:key="round_end_sound"
@@ -68,7 +68,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="@raw/long_beep"
+            app:defaultValue="@raw/double_tone"
             app:entries="@array/sound_entries"
             app:entryValues="@array/sound_values"
             app:key="round_end_warn_sound"
@@ -76,7 +76,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="@raw/long_beep"
+            app:defaultValue="@raw/double_tone"
             app:entries="@array/sound_entries"
             app:entryValues="@array/sound_values"
             app:key="rest_end_warn_sound"
@@ -84,7 +84,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="@raw/short_beep"
+            app:defaultValue="@raw/long_tone"
             app:entries="@array/sound_entries"
             app:entryValues="@array/sound_values"
             app:key="inter_round_alert_sound"
@@ -92,7 +92,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="@raw/short_beep"
+            app:defaultValue="@raw/short_tone"
             app:entries="@array/sound_entries"
             app:entryValues="@array/sound_values"
             app:key="pause_resume_sound"

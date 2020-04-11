@@ -1,15 +1,29 @@
 <resources>
     <!-- Sounds Preferences -->
     <string-array name="sound_entries">
-        <item>Long Beep</item>
-        <item>Short Beep</item>
-        <item>Triple Bell</item>
+        <item>Double Bell 1</item>
+        <item>Double Bell 2</item>
+        <item>Double Tone</item>
+        <item>Gong</item>
+        <item>Long Tone</item>
+        <item>Short Tone</item>
+        <item>Single Bell 1</item>
+        <item>Single Bell 2</item>
+        <item>Triple Bell 1</item>
+        <item>Triple Bell 2</item>
     </string-array>
 
     <string-array name="sound_values">
-        <item>@raw/long_beep</item>
-        <item>@raw/short_beep</item>
-        <item>@raw/triple_bell</item>
+        <item>@raw/double_bell_1</item>
+        <item>@raw/double_bell_2</item>
+        <item>@raw/double_tone</item>
+        <item>@raw/gong</item>
+        <item>@raw/long_tone</item>
+        <item>@raw/short_tone</item>
+        <item>@raw/single_bell_1</item>
+        <item>@raw/single_bell_2</item>
+        <item>@raw/triple_bell_1</item>
+        <item>@raw/triple_bell_2</item>
     </string-array>
 
 </resources>
