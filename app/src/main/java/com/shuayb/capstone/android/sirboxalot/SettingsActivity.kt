@@ -74,7 +74,7 @@ class SettingsActivity : AppCompatActivity() {
                     break
                 }
             }
-            
+
             GlobalScope.launch {
                 val mpSound = MediaPlayer.create(context, rawResId)
                 mpSound.start()

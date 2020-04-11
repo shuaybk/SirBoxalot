@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        setTitle("") //Don't display title
         initSetup()
 
         if (savedInstanceState != null) {
