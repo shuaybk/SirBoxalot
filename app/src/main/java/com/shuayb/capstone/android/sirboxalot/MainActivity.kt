@@ -42,41 +42,48 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             while (true) {
-                val temp = timerService
-                if (temp != null) {
-                    updateTimerViews(temp.getStatus(),
-                        temp.getTimeRemaining(),
-                        temp.getRoundsRemaining(),
-                        temp.getNumRounds(),
-                        temp.getTimerState())
-                }
-                delay(1000)
+                updateTimerViews()
+                delay(250)  //High frequency update to ensure nothing skipped/delayed in timer view
             }
         }
-
     }
 
     private fun initSetup() {
-        updateTimerViews("", 0, 0, 0, TIMER_STATE_STOPPED)
+        updateTimerViews()
         mBinding.startButton.setOnClickListener {
-            //startCounterThread()
             timerService?.startCounterThread()
+            updateTimerViews()
         }
         mBinding.pauseButton.setOnClickListener {
-            //pauseCounterThread()
             timerService?.pauseCounterThread()
+            updateTimerViews()
         }
         mBinding.resetButton.setOnClickListener {
-            //resetButtonPressed()
             timerService?.resetButtonPressed()
+            updateTimerViews()
         }
         mBinding.forwardButton.setOnClickListener {
-            //timeRemaining = 0;
             timerService?.forwardPressed()
+            updateTimerViews()
         }
     }
 
-    private fun updateTimerViews(currStatus : String, timeRemaining : Int, roundsRemaining : Int, NUM_ROUNDS : Int, timerState : String) {
+    private fun updateTimerViews() {
+        //Get values from TimerService (or set default values otherwise)
+        val temp = timerService
+        var currStatus: String = ""
+        var timeRemaining: Int = 0
+        var roundsRemaining: Int = 0
+        var NUM_ROUNDS: Int = 0
+        var timerState: String = TIMER_STATE_STOPPED
+        if (temp != null) {
+            currStatus = temp.getStatus()
+            timeRemaining = temp.getTimeRemaining()
+            roundsRemaining = temp.getRoundsRemaining()
+            NUM_ROUNDS = temp.getNumRounds()
+            timerState = temp.getTimerState()
+        }
+
         runOnUiThread {
             mBinding.timerStatusText.setText(currStatus)
             mBinding.roundTimeRemaining.setText(RandomUtils.secondsToFormattedTime(timeRemaining))
