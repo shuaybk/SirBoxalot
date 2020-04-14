@@ -4,46 +4,46 @@
 
         <EditTextPreference
             app:title="@string/settings_num_rounds_title"
-            app:defaultValue="3"
+            app:defaultValue="10"
             app:key="num_rounds_key"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:title="@string/settings_round_time_title"
-            app:defaultValue="15"
+            app:defaultValue="180"
             app:key="round_time_key"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:title="@string/settings_rest_time_title"
-            app:defaultValue="10"
+            app:defaultValue="60"
             app:key="rest_time_key"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:title="@string/settings_prep_time_title"
-            app:defaultValue="5"
+            app:defaultValue="30"
             app:key="prepare_time_key"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:title="@string/settings_round_end_warn_title"
             app:summary="A warning sound will play this many seconds before the round ends"
-            app:defaultValue="5"
+            app:defaultValue="30"
             app:key="round_end_warn_time_key"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:title="@string/settings_rest_end_warn_title"
             app:summary="A warning sound will play this many seconds before the rest period ends"
-            app:defaultValue="3"
+            app:defaultValue="15"
             app:key="rest_end_warn_time_key"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             app:title="@string/settings_inter_round_alert_title"
             app:summary="An alert will sound this many seconds before the round ends"
-            app:defaultValue="10"
+            app:defaultValue="90"
             app:key="inter_round_alert_time_key"
             app:useSimpleSummaryProvider="true" />
 

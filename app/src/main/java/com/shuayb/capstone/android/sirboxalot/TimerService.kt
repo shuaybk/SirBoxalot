@@ -236,13 +236,13 @@ class TimerService : Service() {
     }
 
     private fun setValuesFromSettings() {
-        NUM_ROUNDS = sharedPreferences.getString("num_rounds_key", "3").toInt()
-        ROUND_TIME = sharedPreferences.getString("round_time_key", "15").toInt()
-        REST_TIME = sharedPreferences.getString("rest_time_key", "10").toInt()
-        PREPARE_TIME = sharedPreferences.getString("prepare_time_key", "5").toInt()
-        ROUND_END_WARNING_TIME = sharedPreferences.getString("round_end_warn_time_key", "5").toInt()
-        REST_END_WARNING_TIME = sharedPreferences.getString("rest_end_warn_time_key", "3").toInt()
-        INTER_ALTERT_TIME = sharedPreferences.getString("inter_round_alert_time_key", "10").toInt()
+        NUM_ROUNDS = sharedPreferences.getString("num_rounds_key", "10").toInt()
+        ROUND_TIME = sharedPreferences.getString("round_time_key", "180").toInt()
+        REST_TIME = sharedPreferences.getString("rest_time_key", "60").toInt()
+        PREPARE_TIME = sharedPreferences.getString("prepare_time_key", "30").toInt()
+        ROUND_END_WARNING_TIME = sharedPreferences.getString("round_end_warn_time_key", "30").toInt()
+        REST_END_WARNING_TIME = sharedPreferences.getString("rest_end_warn_time_key", "15").toInt()
+        INTER_ALTERT_TIME = sharedPreferences.getString("inter_round_alert_time_key", "90").toInt()
         timeRemaining = 0
         roundsRemaining = NUM_ROUNDS
     }

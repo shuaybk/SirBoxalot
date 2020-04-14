@@ -5,7 +5,7 @@
     <!-- Main status text -->
     <string name="status_fight">Fight!</string>
     <string name="status_rest">Rest</string>
-    <string name="status_prep">Prepare to Fight</string>
+    <string name="status_prep">Prepare</string>
     <string name="status_complete">Complete</string>
     <string name="status_paused">--paused--</string>
 

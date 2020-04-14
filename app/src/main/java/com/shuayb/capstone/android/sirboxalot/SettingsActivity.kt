@@ -58,7 +58,7 @@ class SettingsActivity : AppCompatActivity() {
                 "rest_end_warn_sound" -> launchSoundThread(sharedPreferences.getString(key, ""))
                 "inter_round_alert_sound" -> launchSoundThread(sharedPreferences.getString(key, ""))
                 "pause_resume_sound" -> launchSoundThread(sharedPreferences.getString(key, ""))
-                else -> Toast.makeText(context, getString(R.string.toast_settings_change), Toast.LENGTH_LONG).show()
+                //else -> Toast.makeText(context, getString(R.string.toast_settings_change), Toast.LENGTH_LONG).show()
             }
         }
 
