@@ -83,8 +83,7 @@ class TimerService : Service() {
         notificationBuilder = NotificationCompat.Builder(this, BaseApp.CHANNEL_1_ID)
         notification = notificationBuilder
             .setSmallIcon(R.drawable.ic_timer_white_24dp)
-            .setContentTitle("Boxing Timer")
-            .setContentText("0")
+            .setContentTitle(RandomUtils.secondsToFormattedTime(0))
             .setPriority(NotificationCompat.PRIORITY_LOW)      //Redundant for Orea+ because we already defined it on the channel, but for anything below Oreo there is no channel, so define it here again
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setOngoing(true)
@@ -93,9 +92,9 @@ class TimerService : Service() {
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-    private fun updateNotification(newText : String) {
+    private fun updateNotification(time : Int) {
         notification = notificationBuilder
-            .setContentText(newText)
+            .setContentTitle(RandomUtils.secondsToFormattedTime(time))
             .build()
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
@@ -139,7 +138,11 @@ class TimerService : Service() {
     }
 
     fun startCounterThread() {
+        if (timerState == TIMER_STATE_STOPPED) {
+            setValuesFromSettings()
+        }
         createNotification()
+
         if (roundsRemaining > 0 && timerState == TIMER_STATE_STOPPED) {
             timerState = TIMER_STATE_RUNNING
             prepareRequired = true
@@ -159,7 +162,7 @@ class TimerService : Service() {
                     currStatus = STATUS_PREP
                     delay(1000)
                     timeRemaining--
-                    updateNotification(timeRemaining.toString())
+                    updateNotification(timeRemaining)
                 }
                 prepareRequired = false
                 timeRemaining = ROUND_TIME
@@ -177,7 +180,7 @@ class TimerService : Service() {
                     currStatus = STATUS_FIGHT
                     delay(1000)
                     timeRemaining--
-                    updateNotification(timeRemaining.toString())
+                    updateNotification(timeRemaining)
                 }
                 if (roundsRemaining > 1 && REST_TIME > 0) {
                     if (!resting) {
@@ -193,14 +196,14 @@ class TimerService : Service() {
                         currStatus = STATUS_REST
                         delay(1000)
                         timeRemaining--
-                        updateNotification(timeRemaining.toString())
+                        updateNotification(timeRemaining)
                     }
                     resting = false
                 }
                 roundsRemaining--
                 if (roundsRemaining > 0) {
                     timeRemaining = ROUND_TIME
-                    updateNotification(timeRemaining.toString())
+                    updateNotification(timeRemaining)
                     playSound(SOUND_TYPE_START_MAIN)
                 }
             }
@@ -242,7 +245,6 @@ class TimerService : Service() {
         INTER_ALTERT_TIME = sharedPreferences.getString("inter_round_alert_time_key", "10").toInt()
         timeRemaining = 0
         roundsRemaining = NUM_ROUNDS
-        println("We have $NUM_ROUNDS rounds")
     }
 
     fun resetButtonPressed() {

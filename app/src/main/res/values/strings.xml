@@ -14,9 +14,9 @@
     <string name="settings_round_time_title">Round Time (seconds)</string>
     <string name="settings_rest_time_title">Rest Time (seconds)</string>
     <string name="settings_prep_time_title">Time to Prepare (seconds)</string>
-    <string name="settings_round_end_warn_title">Round End Warning</string>
-    <string name="settings_rest_end_warn_title">Rest End Warning</string>
-    <string name="settings_inter_round_alert_title">Interim Round Alert</string>
+    <string name="settings_round_end_warn_title">Round End Warning (seconds before end)</string>
+    <string name="settings_rest_end_warn_title">Rest End Warning (seconds before end)</string>
+    <string name="settings_inter_round_alert_title">Interim Round Alert (seconds before end)</string>
 
     <!-- Sound Settings -->
     <string name="settings_round_start_sound_title">Round Start</string>
@@ -30,4 +30,5 @@
     <string name="round_time_remaining_header">Time Remaining</string>
     <string name="round_header">Round</string>
     <string name="toast_settings_change">Reset timer for changes to take effect</string>
+
 </resources>
