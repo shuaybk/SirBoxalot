@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.preference.PreferenceManager
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.shuayb.capstone.android.sirboxalot.Utils.RandomUtils
@@ -33,12 +30,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         setTitle("") //Don't display title
         initSetup()
 
         val intent = Intent(this, TimerService::class.java)
         bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
+
+        if (savedInstanceState != null) {
+            updateTimerViews()
+        }
 
         GlobalScope.launch {
             while (true) {
@@ -130,6 +132,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        timerService?.clearNotifications()
+    }
 
     private val myConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {

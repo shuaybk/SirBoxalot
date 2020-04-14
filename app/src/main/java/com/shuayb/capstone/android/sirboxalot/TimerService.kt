@@ -1,5 +1,6 @@
 package com.shuayb.capstone.android.sirboxalot
 
+import android.app.Notification
 import android.app.Service
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,6 +13,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import com.shuayb.capstone.android.sirboxalot.Utils.RandomUtils
 import com.shuayb.capstone.android.sirboxalot.databinding.ActivityMainBinding
@@ -31,6 +34,7 @@ class TimerService : Service() {
     private val SOUND_TYPE_REST_END_WARN = "rest_end_warning"
     private val SOUND_TYPE_INTER_ALERT = "inter_alert"
     private val SOUND_TYPE_PAUSE_RESUME = "pause/resume"
+    private val NOTIFICATION_ID = 1
 
     //Initialize the real values from settings
     private var NUM_ROUNDS : Int = 0
@@ -57,6 +61,10 @@ class TimerService : Service() {
     private var currStatus : String = ""
 
     private val mBinder = TimerServiceBinder()
+    private lateinit var notificationManager : NotificationManagerCompat
+    private lateinit var notificationBuilder : NotificationCompat.Builder
+    private lateinit var notification : Notification
+
 
     override fun onBind(intent: Intent): IBinder {
         return mBinder
@@ -66,7 +74,36 @@ class TimerService : Service() {
         super.onCreate()
         println("Creating service")
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
         initSetup()
+    }
+
+    private fun createNotification() {
+        notificationManager = NotificationManagerCompat.from(this)
+        notificationBuilder = NotificationCompat.Builder(this, BaseApp.CHANNEL_1_ID)
+        notification = notificationBuilder
+            .setSmallIcon(R.drawable.ic_timer_white_24dp)
+            .setContentTitle("Boxing Timer")
+            .setContentText("0")
+            .setPriority(NotificationCompat.PRIORITY_LOW)      //Redundant for Orea+ because we already defined it on the channel, but for anything below Oreo there is no channel, so define it here again
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setOngoing(true)
+            .build()
+
+        notificationManager.notify(NOTIFICATION_ID, notification)
+    }
+
+    private fun updateNotification(newText : String) {
+        notification = notificationBuilder
+            .setContentText(newText)
+            .build()
+        notificationManager.notify(NOTIFICATION_ID, notification)
+    }
+
+    fun clearNotifications() {
+        if (::notificationManager.isInitialized) {
+            notificationManager.cancel(NOTIFICATION_ID)
+        }
     }
 
     private fun initSetup() {
@@ -102,7 +139,7 @@ class TimerService : Service() {
     }
 
     fun startCounterThread() {
-        println("Starting counter!")
+        createNotification()
         if (roundsRemaining > 0 && timerState == TIMER_STATE_STOPPED) {
             timerState = TIMER_STATE_RUNNING
             prepareRequired = true
@@ -122,6 +159,7 @@ class TimerService : Service() {
                     currStatus = STATUS_PREP
                     delay(1000)
                     timeRemaining--
+                    updateNotification(timeRemaining.toString())
                 }
                 prepareRequired = false
                 timeRemaining = ROUND_TIME
@@ -139,6 +177,7 @@ class TimerService : Service() {
                     currStatus = STATUS_FIGHT
                     delay(1000)
                     timeRemaining--
+                    updateNotification(timeRemaining.toString())
                 }
                 if (roundsRemaining > 1 && REST_TIME > 0) {
                     if (!resting) {
@@ -154,18 +193,21 @@ class TimerService : Service() {
                         currStatus = STATUS_REST
                         delay(1000)
                         timeRemaining--
+                        updateNotification(timeRemaining.toString())
                     }
                     resting = false
                 }
                 roundsRemaining--
                 if (roundsRemaining > 0) {
                     timeRemaining = ROUND_TIME
+                    updateNotification(timeRemaining.toString())
                     playSound(SOUND_TYPE_START_MAIN)
                 }
             }
             playSound(SOUND_TYPE_END_MAIN)
             timerState = TIMER_STATE_STOPPED
             currStatus = STATUS_COMPLETE
+            clearNotifications()
         }
     }
 
@@ -177,6 +219,7 @@ class TimerService : Service() {
     }
 
     private fun resetCounter() {
+        clearNotifications()
         if (::counterJob.isInitialized) {
             counterJob.cancel()
         }
@@ -246,6 +289,7 @@ class TimerService : Service() {
         if (::counterJob.isInitialized) {
             counterJob.cancel()
         }
+
     }
 
     inner class TimerServiceBinder : Binder() {
