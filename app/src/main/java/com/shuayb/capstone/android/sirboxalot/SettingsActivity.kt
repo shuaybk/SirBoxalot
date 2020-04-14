@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -59,6 +60,90 @@ class SettingsActivity : AppCompatActivity() {
                 "inter_round_alert_sound" -> launchSoundThread(sharedPreferences.getString(key, ""))
                 "pause_resume_sound" -> launchSoundThread(sharedPreferences.getString(key, ""))
                 //else -> Toast.makeText(context, getString(R.string.toast_settings_change), Toast.LENGTH_LONG).show()
+                "num_rounds_key" -> {
+                    var newValue = sharedPreferences.getString(key, "")
+                    try {
+                        var integer = newValue.toInt()
+                        if (integer < 1 || integer >= 1000) {
+                            throw (Exception())
+                        }
+                    } catch (e: Exception) {
+                        findPreference<EditTextPreference>(key)?.setText("10")
+                        Toast.makeText(context, "Invalid entry - Please enter a number between 1 and 1000", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "round_time_key" -> {
+                    var newValue = sharedPreferences.getString(key, "")
+                    try {
+                        var integer = newValue.toInt()
+                        if (integer < 5 || integer >= 600) {
+                            throw (Exception())
+                        }
+                    } catch (e: Exception) {
+                        findPreference<EditTextPreference>(key)?.setText("180")
+                        Toast.makeText(context, "Invalid entry - Please enter a number between 5 and 600", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "rest_time_key" -> {
+                    var newValue = sharedPreferences.getString(key, "")
+                    try {
+                        var integer = newValue.toInt()
+                        if (integer < 5 || integer >= 600) {
+                            throw (Exception())
+                        }
+                    } catch (e: Exception) {
+                        findPreference<EditTextPreference>(key)?.setText("60")
+                        Toast.makeText(context, "Invalid entry - Please enter a number between 5 and 600", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "prepare_time_key" -> {
+                    var newValue = sharedPreferences.getString(key, "")
+                    try {
+                        var integer = newValue.toInt()
+                        if (integer < 0 || integer >= 600) {
+                            throw (Exception())
+                        }
+                    } catch (e: Exception) {
+                        findPreference<EditTextPreference>(key)?.setText("30")
+                        Toast.makeText(context, "Invalid entry - Please enter a number between 0 and 600", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "round_end_warn_time_key" -> {
+                    var newValue = sharedPreferences.getString(key, "")
+                    try {
+                        var integer = newValue.toInt()
+                        if (integer < 0 || integer >= 600) {
+                            throw (Exception())
+                        }
+                    } catch (e: Exception) {
+                        findPreference<EditTextPreference>(key)?.setText("90")
+                        Toast.makeText(context, "Invalid entry - Please enter a number between 0 and 600", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "rest_end_warn_time_key" -> {
+                    var newValue = sharedPreferences.getString(key, "")
+                    try {
+                        var integer = newValue.toInt()
+                        if (integer < 0 || integer >= 600) {
+                            throw (Exception())
+                        }
+                    } catch (e: Exception) {
+                        findPreference<EditTextPreference>(key)?.setText("15")
+                        Toast.makeText(context, "Invalid entry - Please enter a number between 0 and 600", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "inter_round_alert_time_key" -> {
+                    var newValue = sharedPreferences.getString(key, "")
+                    try {
+                        var integer = newValue.toInt()
+                        if (integer < 0 || integer >= 600) {
+                            throw (Exception())
+                        }
+                    } catch (e: Exception) {
+                        findPreference<EditTextPreference>(key)?.setText("90")
+                        Toast.makeText(context, "Invalid entry - Please enter a number between 0 and 600", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
 
