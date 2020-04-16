@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceFragment
 import androidx.preference.PreferenceFragmentCompat
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
