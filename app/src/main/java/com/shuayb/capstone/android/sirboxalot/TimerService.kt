@@ -1,6 +1,7 @@
 package com.shuayb.capstone.android.sirboxalot
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.SharedPreferences
@@ -81,11 +82,16 @@ class TimerService : Service() {
     private fun createNotification() {
         notificationManager = NotificationManagerCompat.from(this)
         notificationBuilder = NotificationCompat.Builder(this, BaseApp.CHANNEL_1_ID)
+
+        var intent = Intent(applicationContext, MainActivity::class.java)
+        var pIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         notification = notificationBuilder
             .setSmallIcon(R.drawable.ic_timer_white_24dp)
             .setContentTitle(RandomUtils.secondsToFormattedTime(0))
             .setPriority(NotificationCompat.PRIORITY_LOW)      //Redundant for Orea+ because we already defined it on the channel, but for anything below Oreo there is no channel, so define it here again
             .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setContentIntent(pIntent)
             .setOngoing(true)
             .build()
 
