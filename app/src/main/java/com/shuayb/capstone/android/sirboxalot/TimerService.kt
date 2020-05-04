@@ -7,18 +7,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Binder
-import android.os.Bundle
 import android.os.IBinder
 import android.preference.PreferenceManager
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.databinding.DataBindingUtil
 import com.shuayb.capstone.android.sirboxalot.Utils.RandomUtils
-import com.shuayb.capstone.android.sirboxalot.databinding.ActivityMainBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -71,6 +64,10 @@ class TimerService : Service() {
         return mBinder
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
+    }
+
     override fun onCreate() {
         super.onCreate()
         println("Creating service")
@@ -79,7 +76,7 @@ class TimerService : Service() {
         initSetup()
     }
 
-    private fun createNotification() {
+    private fun createNotificationAndStartForegroundService() {
         notificationManager = NotificationManagerCompat.from(this)
         notificationBuilder = NotificationCompat.Builder(this, BaseApp.CHANNEL_1_ID)
 
@@ -95,7 +92,7 @@ class TimerService : Service() {
             .setOngoing(true)
             .build()
 
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        startForeground(NOTIFICATION_ID, notification)
     }
 
     private fun updateNotification(time : Int) {
@@ -105,10 +102,8 @@ class TimerService : Service() {
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-    fun clearNotifications() {
-        if (::notificationManager.isInitialized) {
-            notificationManager.cancel(NOTIFICATION_ID)
-        }
+    fun stopForegroundService() {
+        stopForeground(true);
     }
 
     private fun initSetup() {
@@ -147,7 +142,7 @@ class TimerService : Service() {
         if (timerState == TIMER_STATE_STOPPED) {
             setValuesFromSettings()
         }
-        createNotification()
+        createNotificationAndStartForegroundService()
 
         if (roundsRemaining > 0 && timerState == TIMER_STATE_STOPPED) {
             timerState = TIMER_STATE_RUNNING
@@ -216,7 +211,7 @@ class TimerService : Service() {
             playSound(SOUND_TYPE_END_MAIN)
             timerState = TIMER_STATE_STOPPED
             currStatus = STATUS_COMPLETE
-            clearNotifications()
+            stopForegroundService()
         }
     }
 
@@ -228,7 +223,7 @@ class TimerService : Service() {
     }
 
     private fun resetCounter() {
-        clearNotifications()
+        stopForegroundService()
         if (::counterJob.isInitialized) {
             counterJob.cancel()
         }

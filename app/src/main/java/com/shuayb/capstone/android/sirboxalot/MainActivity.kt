@@ -1,18 +1,15 @@
 package com.shuayb.capstone.android.sirboxalot
 
 import android.content.*
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.view.*
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.shuayb.capstone.android.sirboxalot.Utils.RandomUtils
 import com.shuayb.capstone.android.sirboxalot.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
-import kotlin.concurrent.timer
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(this, TimerService::class.java)
         bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
+        startService(intent)
 
         if (savedInstanceState != null) {
             updateTimerViews()
@@ -134,7 +132,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        timerService?.clearNotifications()
     }
 
     private val myConnection = object : ServiceConnection {
