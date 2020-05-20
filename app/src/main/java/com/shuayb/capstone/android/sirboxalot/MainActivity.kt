@@ -11,6 +11,13 @@ import com.shuayb.capstone.android.sirboxalot.Utils.RandomUtils
 import com.shuayb.capstone.android.sirboxalot.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
+/*
+This requires further testing
+The foreground service indeed runs indefinitely if running the code straight from Android Studio,
+but is this still true if not connected to the terminal?  (Terminal displays print output which
+may be changing results if it doesn't count it as "background" work)
+*/
+
 class MainActivity : AppCompatActivity() {
 
     private val TIMER_STATE_STOPPED = "stopped"
